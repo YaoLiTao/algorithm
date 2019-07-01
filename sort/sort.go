@@ -1,5 +1,11 @@
 package sort
 
+func swap(a *int, b *int) {
+	tmp := *a
+	*a = *b
+	*b = tmp
+}
+
 /**
 快速排序
 */
@@ -37,10 +43,7 @@ func BubbleSort(data []int) {
 	for i := 0; i < len(data); i++ {
 		for j := 0; j < len(data)-i-1; j++ {
 			if data[j] > data[j+1] {
-				x := data[j]
-				data[j] = data[j+1]
-				data[j+1] = x
-
+				swap(&data[i], &data[j])
 			}
 		}
 	}
@@ -49,6 +52,18 @@ func BubbleSort(data []int) {
 /**
 选择排序
 */
-func SelectionSort() {
+func SelectionSort(data []int) {
+	for i := 0; i < len(data); i++ {
+		for j := i; j < len(data); j++ {
+			if data[i] > data[j] {
+				swap(&data[i], &data[j])
+			}
+		}
+	}
+}
 
+/**
+直接插入排序
+ */
+func StraightInsertionSort(data []int) {
 }
