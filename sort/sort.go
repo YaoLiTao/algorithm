@@ -34,7 +34,7 @@ func SelectionSort(data []int) {
 
 /**
 直接插入排序
- */
+*/
 func StraightInsertionSort(data []int) {
 	j := 0
 	k := 0
@@ -87,21 +87,41 @@ func QuickSort(data []int, l int, r int) {
 
 /**
 归并排序
- */
-func MergeSort(data []int) {
-
+*/
+func MergeSort(data []int, l int, r int) {
+	if l < r {
+		MergeSort(data, l, (l+r)/2)
+		MergeSort(data, (l+r)/2+1, r)
+		i := l
+		j := (l+r)/2 + 1
+		var temp []int
+		for ; i < (l+r)/2 && j < r; {
+			if data[i] <= data[j] {
+				temp = append(temp, data[i])
+				i++
+			} else {
+				temp = append(temp, data[j])
+				j++
+			}
+		}
+		for k := l; k < r; k++ {
+			data[k] = temp[k-l]
+		}
+	} else {
+		return
+	}
 }
 
 /**
 堆排序
- */
+*/
 func HeapSort(data []int) {
 
 }
 
 /**
 希尔排序
- */
+*/
 func ShellsSort(data []int) {
 
 }

@@ -24,6 +24,10 @@ func main() {
 	data = getRandInt()
 	sort.StraightInsertionSort(data[:])
 	fmt.Println(data)
+
+	data = getRandInt()
+	sort.MergeSort(data, 0, len(data)-1)
+	fmt.Println(data)
 }
 
 func getRandInt() []int {
