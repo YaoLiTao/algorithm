@@ -102,6 +102,6 @@ func HeapSort(data []int) {
 /**
 希尔排序
  */
-func ShellsSort() {
+func ShellsSort(data []int) {
 
 }
