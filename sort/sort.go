@@ -131,3 +131,17 @@ func HeapSort(data []int) {
 func ShellsSort(data []int) {
 
 }
+
+/**
+位排序
+*/
+func BitSort(data []int) {
+
+}
+
+/**
+桶排序
+*/
+func BucketSort(data []int) {
+
+}
