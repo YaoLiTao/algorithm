@@ -88,27 +88,33 @@ func QuickSort(data []int, l int, r int) {
 /**
 归并排序
 */
-func MergeSort(data []int, l int, r int) {
+func MergeSort(data []int, temp []int, l int, r int) {
 	if l < r {
-		MergeSort(data, l, (l+r)/2)
-		MergeSort(data, (l+r)/2+1, r)
+		center := (l + r) / 2
+		MergeSort(data, temp, l, center)
+		MergeSort(data, temp, center+1, r)
+
 		i := l
-		j := (l+r)/2 + 1
-		var temp []int
-		for ; i < (l+r)/2 && j < r; {
-			if data[i] <= data[j] {
-				temp = append(temp, data[i])
+		j := center + 1
+		for k := l; k < r; k++ {
+			if i > center {
+				temp[k] = data[j]
+				j++
+			} else if j > r {
+				temp[k] = data[i]
+				i++
+			} else if data[i] < data[j] {
+				temp[k] = data[i]
 				i++
 			} else {
-				temp = append(temp, data[j])
+				temp[k] = data[j]
 				j++
 			}
 		}
+
 		for k := l; k < r; k++ {
-			data[k] = temp[k-l]
+			data[k] = temp[k]
 		}
-	} else {
-		return
 	}
 }
 
