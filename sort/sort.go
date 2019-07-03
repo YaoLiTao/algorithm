@@ -1,6 +1,6 @@
 package sort
 
-func swap(a *int, b *int) {
+func Swap(a *int, b *int) {
 	tmp := *a
 	*a = *b
 	*b = tmp
@@ -13,7 +13,7 @@ func BubbleSort(data []int) {
 	for i := 0; i < len(data); i++ {
 		for j := 0; j < len(data)-i-1; j++ {
 			if data[j] > data[j+1] {
-				swap(&data[i], &data[j])
+				Swap(&data[i], &data[j])
 			}
 		}
 	}
@@ -26,7 +26,7 @@ func SelectionSort(data []int) {
 	for i := 0; i < len(data); i++ {
 		for j := i; j < len(data); j++ {
 			if data[i] > data[j] {
-				swap(&data[i], &data[j])
+				Swap(&data[i], &data[j])
 			}
 		}
 	}

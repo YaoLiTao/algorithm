@@ -1,4 +1,4 @@
-package main
+package kademlia
 
 // 探测一个节点是否在线
 func Ping() {

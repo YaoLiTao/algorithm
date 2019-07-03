@@ -2,6 +2,7 @@ package main
 
 import (
 	"algorithm/sort"
+	"algorithm/tree"
 	"fmt"
 	"math/rand"
 	"time"
@@ -41,6 +42,9 @@ func main() {
 	sort.MergeSort(data, temp[:], 0, len(data)-1)
 	fmt.Println("MergeSort time:", time.Now().Sub(begin))
 	//fmt.Println("MergeSort: ", data)
+
+	heap := tree.NewBinaryHeap(100)
+	fmt.Println(heap)
 }
 
 func getRandInt() []int {
