@@ -2,6 +2,7 @@ package main
 
 import (
 	"algorithm/yami64"
+	"fmt"
 	"math/rand"
 )
 
@@ -47,7 +48,10 @@ func main() {
 	//fmt.Println("MergeSort time:", time.Now().Sub(begin))
 	//fmt.Println("MergeSort: ", data)
 
-	yami64.Encode("")
+	encoded := yami64.Encode("abcdefghi")
+	fmt.Println(encoded)
+	raw := yami64.Decode(encoded)
+	fmt.Println(raw)
 }
 
 func getRandInt() []int {

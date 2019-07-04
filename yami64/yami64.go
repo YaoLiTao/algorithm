@@ -1,12 +1,10 @@
 package yami64
 
-import "fmt"
-
-var alphabets [64]int
-var ascii [256]int
+var alphabets [64]byte
+var ascii [256]byte
 
 func init() {
-	alphabets = [64]int{
+	alphabets = [64]byte{
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 		'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
 		'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -18,26 +16,35 @@ func init() {
 	}
 
 	for i := 0; i < 64; i++ {
-		ascii[alphabets[i]] = i
+		ascii[alphabets[i]] = byte(i)
 	}
-
-	fmt.Println(alphabets)
-	fmt.Println(ascii)
-	fmt.Println(ascii['-'])
 }
 
 /**
 编码原始字符串
  */
 func Encode(raw string) string {
-	for i := 0; i < len(raw); i++ {
+	rawByte := []byte(raw)
+	var encodedByte []byte
+	for i := 0; i < len(raw); i = i + 3 {
+		encodedByte = append(encodedByte, alphabets[rawByte[i]&0x3F])
+		encodedByte = append(encodedByte, alphabets[((rawByte[i]&0xC0)>>6)|((rawByte[i+1]&0x0F)<<2)])
+		encodedByte = append(encodedByte, alphabets[((rawByte[i+1]&0xF0)>>4)|((rawByte[i+2]&0x03)<<4)])
+		encodedByte = append(encodedByte, alphabets[(rawByte[i+2]&0xFC)>>2])
 	}
-	return ""
+	return string(encodedByte)
 }
 
 /**
 解码yami64字符串
  */
 func Decode(encoded string) string {
-	return ""
+	encodedByte := []byte(encoded)
+	var rawByte []byte
+	for i := 0; i < len(encodedByte); i = i + 4 {
+		rawByte = append(rawByte, ascii[encodedByte[i]]|(ascii[encodedByte[i+1]]&0x03)<<6)
+		rawByte = append(rawByte, (ascii[encodedByte[i+1]]&0x3C)>>2|(ascii[encodedByte[i+2]]&0x0F)<<4)
+		rawByte = append(rawByte, (ascii[encodedByte[i+2]]&0x30)>>4|(ascii[encodedByte[i+3]]&0x3F)<<2)
+	}
+	return string(rawByte)
 }
