@@ -1,6 +1,8 @@
 package sort
 
-func Swap(a *int, b *int) {
+import "algorithm/tree"
+
+func swap(a *int, b *int) {
 	tmp := *a
 	*a = *b
 	*b = tmp
@@ -11,9 +13,9 @@ func Swap(a *int, b *int) {
 */
 func BubbleSort(data []int) {
 	for i := 0; i < len(data); i++ {
-		for j := 0; j < len(data)-i-1; j++ {
-			if data[j] > data[j+1] {
-				Swap(&data[i], &data[j])
+		for j := len(data) - 1; j > i; j-- {
+			if data[j - 1] > data[j] {
+				swap(&data[j - 1], &data[j])
 			}
 		}
 	}
@@ -26,7 +28,7 @@ func SelectionSort(data []int) {
 	for i := 0; i < len(data); i++ {
 		for j := i; j < len(data); j++ {
 			if data[i] > data[j] {
-				Swap(&data[i], &data[j])
+				swap(&data[i], &data[j])
 			}
 		}
 	}
@@ -121,8 +123,9 @@ func MergeSort(data []int, temp []int, l int, r int) {
 /**
 堆排序
 */
-func HeapSort(data []int) {
-
+func HeapSort(data []int) []int {
+	heap := tree.NewBinaryHeap(len(data))
+	return heap.Sort(data)
 }
 
 /**

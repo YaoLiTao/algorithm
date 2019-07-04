@@ -1,10 +1,5 @@
 package tree
 
-import (
-	"algorithm/sort"
-	"fmt"
-)
-
 /**
 二叉堆
 1.每个父节点均大于子节点
@@ -17,12 +12,18 @@ type BinaryHeap struct {
 	size  int
 }
 
+func swap(a *int, b *int) {
+	tmp := *a
+	*a = *b
+	*b = tmp
+}
+
 func NewBinaryHeap(cap int) *BinaryHeap {
 	return &BinaryHeap{make([]int, cap), cap, 0}
 }
 
 /**
-最大堆向下调整
+下沉
 */
 func (heap *BinaryHeap) filterDown(index int) {
 	if (2*index + 1) < heap.size {
@@ -33,14 +34,14 @@ func (heap *BinaryHeap) filterDown(index int) {
 			temp = 2*index + 2
 		}
 		if heap.array[index] < heap.array[temp] {
-			sort.Swap(&heap.array[index], &heap.array[temp])
+			swap(&heap.array[index], &heap.array[temp])
 			heap.filterDown(temp)
 		}
 	}
 }
 
 /**
-最大堆向上调整
+上浮
 */
 func (heap *BinaryHeap) filterUp(index int) {
 	parent := 0
@@ -50,7 +51,7 @@ func (heap *BinaryHeap) filterUp(index int) {
 		parent = (index - 2) / 2
 	}
 	if heap.array[parent] < heap.array[index] {
-		sort.Swap(&heap.array[parent], &heap.array[index])
+		swap(&heap.array[parent], &heap.array[index])
 		heap.filterUp(parent)
 	}
 }
@@ -65,7 +66,7 @@ func (heap *BinaryHeap) GetIndex(data int) {
 删除最大堆中的data
 */
 func (heap *BinaryHeap) Remove(index int) {
-	sort.Swap(&heap.array[index], &heap.array[heap.size-1])
+	swap(&heap.array[index], &heap.array[heap.size-1])
 	heap.filterDown(index)
 	heap.size--
 }
@@ -85,11 +86,22 @@ func (heap *BinaryHeap) Insert(data int) bool {
 }
 
 /**
-打印二叉堆
-*/
-func (heap *BinaryHeap) Print() []int {
-	for i := 0; i < heap.size; i++ {
-		fmt.Println(heap.array[i])
+堆排序
+ */
+func (heap *BinaryHeap) Sort(data []int) []int {
+	for i := 0; i < len(data); i++ {
+		heap.Insert(data[i])
 	}
-	return heap.array[0:heap.size]
+	for i := heap.size - 1; i > 0; i-- {
+		swap(&heap.array[0], &heap.array[i])
+		heap.filterDown(0)
+	}
+	return heap.array
+}
+
+/**
+获取二叉堆数组
+*/
+func (heap *BinaryHeap) getHeap() []int {
+	return heap.array[:heap.size]
 }
