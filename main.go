@@ -48,12 +48,12 @@ func main() {
 	//fmt.Println("MergeSort time:", time.Now().Sub(begin))
 	//fmt.Println("MergeSort: ", data)
 
-	str := ""
-	fmt.Println("原始字符串:", str)
+	str := "https://www.baidu.com/groes?abc=1&qq=2"
+	fmt.Println(str)
 	encoded := yami64.Encode(str)
-	fmt.Println("yami64编码:", encoded)
+	fmt.Println(encoded)
 	raw := yami64.Decode(encoded)
-	fmt.Println("yami64解码:", raw)
+	fmt.Println(raw)
 }
 
 func getRandInt() []int {
