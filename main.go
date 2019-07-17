@@ -1,14 +1,16 @@
 package main
 
 import (
+	"algorithm/sort"
 	"algorithm/yami64"
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 func main() {
-	//var data []int
-	//var begin time.Time
+	var data []int
+	var begin time.Time
 
 	//data = getRandInt()
 	//begin = time.Now()
@@ -45,13 +47,20 @@ func main() {
 	//fmt.Println(data)
 	//begin = time.Now()
 	//data = sort.HeapSort(data)
-	//fmt.Println("MergeSort time:", time.Now().Sub(begin))
-	//fmt.Println("MergeSort: ", data)
+	//fmt.Println("HeapSort time:", time.Now().Sub(begin))
+	//fmt.Println("HeapSort: ", data)
 
-	str := "https://www.baidu.com/groes?abc=1&qq=2"
+	data = []int{3, 23, 5, 9, 55, 1, 43, 27, 77, 32, 65, 1000}
+	fmt.Println(data)
+	begin = time.Now()
+	data = sort.BitmapSort(data)
+	fmt.Println("BitmapSort time:", time.Now().Sub(begin))
+	fmt.Println("BitmapSort: ", data)
+
+	str := "abc"
 	fmt.Println(str)
 	encoded := yami64.Encode(str)
-	fmt.Println(encoded)
+	fmt.Println("yami64编码:", encoded)
 	raw := yami64.Decode(encoded)
 	fmt.Println(raw)
 }

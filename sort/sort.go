@@ -1,6 +1,9 @@
 package sort
 
-import "algorithm/tree"
+import (
+	"algorithm/tree"
+	"math"
+)
 
 func swap(a *int, b *int) {
 	tmp := *a
@@ -14,8 +17,8 @@ func swap(a *int, b *int) {
 func BubbleSort(data []int) {
 	for i := 0; i < len(data); i++ {
 		for j := len(data) - 1; j > i; j-- {
-			if data[j - 1] > data[j] {
-				swap(&data[j - 1], &data[j])
+			if data[j-1] > data[j] {
+				swap(&data[j-1], &data[j])
 			}
 		}
 	}
@@ -126,6 +129,29 @@ func MergeSort(data []int, temp []int, l int, r int) {
 func HeapSort(data []int) []int {
 	heap := tree.NewBinaryHeap(len(data))
 	return heap.Sort(data)
+}
+
+/**
+bitmap排序
+ */
+func BitmapSort(data []int) []int {
+	temp := make([]byte, math.MaxInt32)
+	for i := 0; i < len(data); i++ {
+		index := data[i] / 8
+		offset := data[i] % 8
+		temp[index] = temp[index] | (0x01 << uint(offset))
+	}
+	res := make([]int, len(data))
+	rIndex := 0
+	for i := 0; i < len(temp); i++ {
+		for j := 0; j < 8; j ++ {
+			if (temp[i] >> uint(j) & 0x01) == 1 {
+				res[rIndex] = i*8 + j
+				rIndex++
+			}
+		}
+	}
+	return res
 }
 
 /**
