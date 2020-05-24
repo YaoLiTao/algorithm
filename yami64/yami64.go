@@ -36,12 +36,12 @@ func Encode(raw string) string {
 	)
 	for i := 0; i < len(raw); i += 3 {
 		encodedByte[index] = alphabets[rawByte[i]&0x3F]
-		if len(raw) - i == 1 {
+		if len(raw)-i == 1 {
 			encodedByte[index+1] = alphabets[(rawByte[i]&0xC0)>>6]
 			break
 		}
 		encodedByte[index+1] = alphabets[((rawByte[i]&0xC0)>>6)|((rawByte[i+1]&0x0F)<<2)]
-		if len(raw) - i == 2 {
+		if len(raw)-i == 2 {
 			encodedByte[index+2] = alphabets[(rawByte[i+1]&0xF0)>>4]
 			break
 		}
@@ -68,11 +68,11 @@ func Decode(encoded string) string {
 	)
 	for i := 0; i < len(encodedByte); i = i + 4 {
 		rawByte[index] = ascii[encodedByte[i]] | (ascii[encodedByte[i+1]]&0x03)<<6
-		if len(encodedByte) - i == 2 {
+		if len(encodedByte)-i == 2 {
 			break
 		}
 		rawByte[index+1] = (ascii[encodedByte[i+1]]&0x3C)>>2 | (ascii[encodedByte[i+2]]&0x0F)<<4
-		if len(encodedByte) - i == 3 {
+		if len(encodedByte)-i == 3 {
 			break
 		}
 		rawByte[index+2] = (ascii[encodedByte[i+2]]&0x30)>>4 | (ascii[encodedByte[i+3]]&0x3F)<<2

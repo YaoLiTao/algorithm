@@ -87,7 +87,7 @@ func (heap *BinaryHeap) Insert(data int) bool {
 
 /**
 堆排序
- */
+*/
 func (heap *BinaryHeap) Sort(data []int) []int {
 	for i := 0; i < len(data); i++ {
 		heap.Insert(data[i])

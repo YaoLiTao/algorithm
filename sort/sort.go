@@ -68,7 +68,7 @@ func QuickSort(data []int, l int, r int) {
 		i := l
 		j := r
 		x := data[i]
-		for ; i < j; {
+		for i < j {
 			for ; i < j && data[j] > x; j-- {
 
 			}
@@ -133,7 +133,7 @@ func HeapSort(data []int) []int {
 
 /**
 bitmap排序
- */
+*/
 func BitmapSort(data []int) []int {
 	temp := make([]byte, math.MaxInt32)
 	for i := 0; i < len(data); i++ {
@@ -144,7 +144,7 @@ func BitmapSort(data []int) []int {
 	res := make([]int, len(data))
 	rIndex := 0
 	for i := 0; i < len(temp); i++ {
-		for j := 0; j < 8; j ++ {
+		for j := 0; j < 8; j++ {
 			if (temp[i] >> uint(j) & 0x01) == 1 {
 				res[rIndex] = i*8 + j
 				rIndex++
