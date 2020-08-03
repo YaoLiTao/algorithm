@@ -1,8 +1,8 @@
 package main
 
 import (
+	"algorithm/base64"
 	"algorithm/sort"
-	"algorithm/yami64"
 	"fmt"
 	"math/rand"
 	"time"
@@ -59,9 +59,9 @@ func main() {
 
 	str := "abc"
 	fmt.Println(str)
-	encoded := yami64.Encode(str)
+	encoded := base64.Encode(str)
 	fmt.Println("yami64编码:", encoded)
-	raw := yami64.Decode(encoded)
+	raw := base64.Decode(encoded)
 	fmt.Println(raw)
 }
 

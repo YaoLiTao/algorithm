@@ -1,4 +1,4 @@
-package yami64
+package base64
 
 var alphabets [64]byte
 var ascii [256]byte
@@ -53,7 +53,7 @@ func Encode(raw string) string {
 }
 
 /**
-解码yami64字符串
+解码URL-SAFE-BASE64字符串
 */
 func Decode(encoded string) string {
 	encodedByte := []byte(encoded)
