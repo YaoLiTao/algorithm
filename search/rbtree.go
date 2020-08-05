@@ -8,22 +8,23 @@ package search
 5.从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点。
 */
 
-type RBTree struct {
-	size     int64
-	rootNode *node
-}
-
 const (
 	RED   = false
 	BLACK = true
 )
 
-type node struct {
-	data   int
+type RBTree struct {
+	size     int64
+	rootNode *treeNode
+}
+
+type treeNode struct {
+	key    uint64
+	value  string
 	status bool // false：红 true：黑
-	parent *node
-	left   *node
-	right  *node
+	parent *treeNode
+	left   *treeNode
+	right  *treeNode
 }
 
 func NewRBTree() RBTree {
@@ -33,10 +34,11 @@ func NewRBTree() RBTree {
 	}
 }
 
-func (tree *RBTree) Insert(data int) {
+func (tree *RBTree) Insert(key uint64, value string) {
 	if tree.rootNode == nil {
-		tree.rootNode = &node{ // 性质2
-			data:   data,
+		tree.rootNode = &treeNode{ // 性质2
+			key:    key,
+			value:  value,
 			status: BLACK,
 			parent: nil,
 			left:   nil,
@@ -50,14 +52,28 @@ func (tree *RBTree) Delete(data int) {
 
 }
 
-func grandParent(n *node) *node {
+func (tree *RBTree) Get(key uint64) string {
+	cntNode := tree.rootNode
+	for cntNode != nil {
+		if key < cntNode.key {
+			cntNode = cntNode.left
+		} else if key > cntNode.key {
+			cntNode = cntNode.left
+		} else {
+			return cntNode.value
+		}
+	}
+	return ""
+}
+
+func grandparent(n *treeNode) *treeNode {
 	return n.parent.parent
 }
 
-func uncle(n *node) *node {
-	if n.parent == grandParent(n).left {
-		return grandParent(n).right
+func uncle(n *treeNode) *treeNode {
+	if n.parent == grandparent(n).left {
+		return grandparent(n).right
 	} else {
-		return grandParent(n).left
+		return grandparent(n).left
 	}
 }
