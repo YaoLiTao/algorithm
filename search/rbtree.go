@@ -1,5 +1,7 @@
 package search
 
+import "errors"
+
 /**
 1.节点是红色或黑色。
 2.根是黑色。
@@ -52,7 +54,7 @@ func (tree *RBTree) Delete(data int) {
 
 }
 
-func (tree *RBTree) Get(key uint64) string {
+func (tree *RBTree) Get(key uint64) (string, error) {
 	cntNode := tree.rootNode
 	for cntNode != nil {
 		if key < cntNode.key {
@@ -60,10 +62,10 @@ func (tree *RBTree) Get(key uint64) string {
 		} else if key > cntNode.key {
 			cntNode = cntNode.left
 		} else {
-			return cntNode.value
+			return cntNode.value, nil
 		}
 	}
-	return ""
+	return "", errors.New("value is nil")
 }
 
 func grandparent(n *treeNode) *treeNode {

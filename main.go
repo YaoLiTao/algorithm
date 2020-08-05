@@ -64,7 +64,11 @@ func main() {
 
 	rbTree := search.NewRBTree()
 	rbTree.Insert(1, "hello")
-	fmt.Println(rbTree.Get(1))
+	value, err := rbTree.Get(1)
+	if err != nil {
+		return
+	}
+	fmt.Println(value)
 }
 
 func getRandInt() []int {
