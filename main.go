@@ -63,12 +63,12 @@ func main() {
 	//fmt.Println(raw)
 
 	rbTree := search.NewRBTree()
-	rbTree.Insert(1, "hello")
-	value, err := rbTree.Get(1)
-	if err != nil {
-		return
-	}
-	fmt.Println(value)
+	rbTree.Insert(1, "a")
+	rbTree.Insert(2, "b")
+	rbTree.Insert(3, "c")
+	fmt.Println(rbTree.Get(1))
+	fmt.Println(rbTree.Get(2))
+	fmt.Println(rbTree.Get(3))
 }
 
 func getRandInt() []int {

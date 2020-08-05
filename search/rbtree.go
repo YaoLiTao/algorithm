@@ -1,6 +1,8 @@
 package search
 
-import "errors"
+import (
+	"errors"
+)
 
 /**
 1.节点是红色或黑色。
@@ -37,6 +39,7 @@ func NewRBTree() RBTree {
 }
 
 func (tree *RBTree) Insert(key uint64, value string) {
+	// 根节点
 	if tree.rootNode == nil {
 		tree.rootNode = &treeNode{ // 性质2
 			key:    key,
@@ -47,6 +50,43 @@ func (tree *RBTree) Insert(key uint64, value string) {
 			right:  nil,
 		}
 		return
+	}
+
+	cntNode := tree.rootNode
+	for cntNode != nil {
+		if key < cntNode.key && cntNode.left != nil {
+			cntNode = cntNode.left
+			break
+		} else if key < cntNode.key && cntNode.left == nil {
+			// todo 左新节点
+			cntNode.left = &treeNode{
+				key:    key,
+				value:  value,
+				status: BLACK,
+				parent: cntNode,
+				left:   nil,
+				right:  nil,
+			}
+			return
+		} else if key > cntNode.key && cntNode.right != nil {
+			cntNode = cntNode.right
+			break
+		} else if key > cntNode.key && cntNode.right == nil {
+			// todo 右新节点
+			cntNode.right = &treeNode{
+				key:    key,
+				value:  value,
+				status: BLACK,
+				parent: cntNode,
+				left:   nil,
+				right:  nil,
+			}
+			return
+		} else if key == cntNode.key {
+			// 更新值
+			cntNode.value = value
+			return
+		}
 	}
 }
 
