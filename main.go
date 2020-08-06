@@ -67,10 +67,13 @@ func main() {
 	rbTree.Insert(2, 2)
 	rbTree.Insert(9, 9)
 	rbTree.Insert(0, 0)
+	rbTree.Insert(8, 8)
 	rbTree.Insert(1, 1)
 	rbTree.Insert(4, 4)
 	rbTree.Insert(7, 7)
 	rbTree.Insert(5, 5)
+	rbTree.Insert(6, 6)
+
 	fmt.Println(rbTree.Get(0))
 	fmt.Println(rbTree.Get(1))
 	fmt.Println(rbTree.Get(2))
@@ -81,6 +84,7 @@ func main() {
 	fmt.Println(rbTree.Get(7))
 	fmt.Println(rbTree.Get(8))
 	fmt.Println(rbTree.Get(9))
+	fmt.Println(rbTree.Get(10))
 }
 
 func getRandInt() []int {

@@ -1,8 +1,6 @@
 package search
 
-import (
-	"errors"
-)
+import "errors"
 
 /**
 1.节点是红色或黑色。
@@ -15,6 +13,8 @@ import (
 const (
 	RED   = false
 	BLACK = true
+	LEFT  = false
+	RIGHT = true
 )
 
 type RBTree struct {
@@ -25,7 +25,7 @@ type RBTree struct {
 type treeNode struct {
 	key        int64
 	value      int64
-	status     bool // false：红 true：黑
+	color      bool // false：红 true：黑
 	parent     *treeNode
 	leftChild  *treeNode
 	rightChild *treeNode
@@ -44,7 +44,7 @@ func (tree *RBTree) Insert(key int64, value int64) {
 		tree.rootNode = &treeNode{ // 性质2
 			key:        key,
 			value:      value,
-			status:     BLACK,
+			color:      BLACK,
 			parent:     nil,
 			leftChild:  nil,
 			rightChild: nil,
@@ -52,34 +52,36 @@ func (tree *RBTree) Insert(key int64, value int64) {
 		return
 	}
 
-	cntNode := tree.rootNode
-	for cntNode != nil {
-		if key < cntNode.key && cntNode.leftChild == nil {
-			cntNode.leftChild = &treeNode{
+	currentNode := tree.rootNode
+	for currentNode != nil {
+		if key < currentNode.key && currentNode.leftChild == nil {
+			var newNode = treeNode{
 				key:        key,
 				value:      value,
-				status:     BLACK,
-				parent:     cntNode,
+				color:      BLACK,
+				parent:     currentNode,
 				leftChild:  nil,
 				rightChild: nil,
 			}
+			currentNode.leftChild = &newNode
 			return
-		} else if key > cntNode.key && cntNode.rightChild == nil {
-			cntNode.rightChild = &treeNode{
+		} else if key > currentNode.key && currentNode.rightChild == nil {
+			var newNode = treeNode{
 				key:        key,
 				value:      value,
-				status:     BLACK,
-				parent:     cntNode,
+				color:      BLACK,
+				parent:     currentNode,
 				leftChild:  nil,
 				rightChild: nil,
 			}
+			currentNode.rightChild = &newNode
 			return
-		} else if key < cntNode.key && cntNode.leftChild != nil {
-			cntNode = cntNode.leftChild
-		} else if key > cntNode.key && cntNode.rightChild != nil {
-			cntNode = cntNode.rightChild
-		} else if key == cntNode.key {
-			cntNode.value = value
+		} else if key < currentNode.key && currentNode.leftChild != nil {
+			currentNode = currentNode.leftChild
+		} else if key > currentNode.key && currentNode.rightChild != nil {
+			currentNode = currentNode.rightChild
+		} else if key == currentNode.key {
+			currentNode.value = value
 			return
 		}
 	}
@@ -90,23 +92,99 @@ func (tree *RBTree) Delete(data int) {
 }
 
 func (tree *RBTree) Get(key int64) (int64, error) {
-	cntNode := tree.rootNode
-	for cntNode != nil {
-		if key < cntNode.key {
-			cntNode = cntNode.leftChild
-		} else if key > cntNode.key {
-			cntNode = cntNode.rightChild
+	currentNode := tree.rootNode
+	for currentNode != nil {
+		if key < currentNode.key {
+			currentNode = currentNode.leftChild
+		} else if key > currentNode.key {
+			currentNode = currentNode.rightChild
 		} else {
-			return cntNode.value, nil
+			return currentNode.value, nil
 		}
 	}
 	return 0, errors.New("value is nil")
 }
 
+func insertAdjustOne(node *treeNode) {
+	if node.parent == nil { // insert_case2 父节点为黑色，新节点为红色来保持性质5
+
+	} else { // insert_case3 父节点为红色，证明肯定存在祖父节点（根节点为黑色）
+
+	}
+}
+
+/**
+左旋
+*/
+func (tree *RBTree) rotateLeft(node *treeNode) {
+	if node.parent == nil { // 自己是根节点，不执行左旋操作
+		return
+	}
+
+	parent := node.parent
+	grandparent := grandparent(node)
+	leftChild := node.leftChild
+
+	parent.rightChild = leftChild
+	parent.parent = node
+	if leftChild != nil {
+		leftChild.parent = parent
+	}
+
+	node.leftChild = parent
+	node.parent = grandparent
+	if grandparent == nil { // 判断父节点是否是根节点
+		tree.rootNode = node
+	} else {
+		if grandparent.leftChild == parent {
+			grandparent.leftChild = node
+		} else {
+			grandparent.rightChild = node
+		}
+	}
+}
+
+/**
+右旋
+*/
+func (tree *RBTree) rotateRight(node *treeNode) {
+	if node.parent == nil { // 自己是根节点，不执行右旋操作
+		return
+	}
+
+	parent := node.parent
+	grandparent := grandparent(node)
+	rightChild := node.rightChild
+
+	parent.leftChild = rightChild
+	parent.parent = node
+	if rightChild != nil {
+		rightChild.parent = parent
+	}
+
+	node.rightChild = parent
+	node.parent = grandparent
+	if grandparent == nil {
+		tree.rootNode = node
+	} else {
+		if grandparent.leftChild == parent {
+			grandparent.leftChild = node
+		} else {
+			grandparent.rightChild = node
+		}
+	}
+}
+
+/**
+获取祖父节点
+*/
 func grandparent(n *treeNode) *treeNode {
 	return n.parent.parent
 }
 
+/**
+获取叔父节点
+*/
 func uncle(n *treeNode) *treeNode {
 	if n.parent == grandparent(n).leftChild {
 		return grandparent(n).rightChild
