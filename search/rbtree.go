@@ -23,12 +23,12 @@ type RBTree struct {
 }
 
 type treeNode struct {
-	key    uint64
-	value  string
-	status bool // false：红 true：黑
-	parent *treeNode
-	left   *treeNode
-	right  *treeNode
+	key        int64
+	value      int64
+	status     bool // false：红 true：黑
+	parent     *treeNode
+	leftChild  *treeNode
+	rightChild *treeNode
 }
 
 func NewRBTree() RBTree {
@@ -38,52 +38,47 @@ func NewRBTree() RBTree {
 	}
 }
 
-func (tree *RBTree) Insert(key uint64, value string) {
+func (tree *RBTree) Insert(key int64, value int64) {
 	// 根节点
 	if tree.rootNode == nil {
 		tree.rootNode = &treeNode{ // 性质2
-			key:    key,
-			value:  value,
-			status: BLACK,
-			parent: nil,
-			left:   nil,
-			right:  nil,
+			key:        key,
+			value:      value,
+			status:     BLACK,
+			parent:     nil,
+			leftChild:  nil,
+			rightChild: nil,
 		}
 		return
 	}
 
 	cntNode := tree.rootNode
 	for cntNode != nil {
-		if key < cntNode.key && cntNode.left != nil {
-			cntNode = cntNode.left
-			break
-		} else if key < cntNode.key && cntNode.left == nil {
-			// todo 左新节点
-			cntNode.left = &treeNode{
-				key:    key,
-				value:  value,
-				status: BLACK,
-				parent: cntNode,
-				left:   nil,
-				right:  nil,
+		if key < cntNode.key && cntNode.leftChild == nil {
+			cntNode.leftChild = &treeNode{
+				key:        key,
+				value:      value,
+				status:     BLACK,
+				parent:     cntNode,
+				leftChild:  nil,
+				rightChild: nil,
 			}
 			return
-		} else if key > cntNode.key && cntNode.right != nil {
-			cntNode = cntNode.right
-			break
-		} else if key > cntNode.key && cntNode.right == nil {
-			// todo 右新节点
-			cntNode.right = &treeNode{
-				key:    key,
-				value:  value,
-				status: BLACK,
-				parent: cntNode,
-				left:   nil,
-				right:  nil,
+		} else if key > cntNode.key && cntNode.rightChild == nil {
+			cntNode.rightChild = &treeNode{
+				key:        key,
+				value:      value,
+				status:     BLACK,
+				parent:     cntNode,
+				leftChild:  nil,
+				rightChild: nil,
 			}
 			return
+		} else if key < cntNode.key && cntNode.leftChild != nil {
+			cntNode = cntNode.leftChild
+		} else if key > cntNode.key && cntNode.rightChild != nil {
+			cntNode = cntNode.rightChild
 		} else if key == cntNode.key {
-			// 更新值
 			cntNode.value = value
 			return
 		}
@@ -94,18 +89,18 @@ func (tree *RBTree) Delete(data int) {
 
 }
 
-func (tree *RBTree) Get(key uint64) (string, error) {
+func (tree *RBTree) Get(key int64) (int64, error) {
 	cntNode := tree.rootNode
 	for cntNode != nil {
 		if key < cntNode.key {
-			cntNode = cntNode.left
+			cntNode = cntNode.leftChild
 		} else if key > cntNode.key {
-			cntNode = cntNode.left
+			cntNode = cntNode.rightChild
 		} else {
 			return cntNode.value, nil
 		}
 	}
-	return "", errors.New("value is nil")
+	return 0, errors.New("value is nil")
 }
 
 func grandparent(n *treeNode) *treeNode {
@@ -113,9 +108,9 @@ func grandparent(n *treeNode) *treeNode {
 }
 
 func uncle(n *treeNode) *treeNode {
-	if n.parent == grandparent(n).left {
-		return grandparent(n).right
+	if n.parent == grandparent(n).leftChild {
+		return grandparent(n).rightChild
 	} else {
-		return grandparent(n).left
+		return grandparent(n).leftChild
 	}
 }
