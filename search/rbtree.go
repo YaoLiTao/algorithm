@@ -1,6 +1,8 @@
 package search
 
-import "errors"
+import (
+	"errors"
+)
 
 /**
 1.节点是红色或黑色。
@@ -8,13 +10,13 @@ import "errors"
 3.所有叶子都是黑色（叶子是NIL节点）。
 4.每个红色节点必须有两个黑色的子节点。（从每个叶子到根的所有路径上不能有两个连续的红色节点。）
 5.从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点。
+
+默认新加入的节点为红色
 */
 
 const (
 	RED   = false
 	BLACK = true
-	LEFT  = false
-	RIGHT = true
 )
 
 type RBTree struct {
@@ -41,10 +43,10 @@ func NewRBTree() RBTree {
 func (tree *RBTree) Insert(key int64, value int64) {
 	// 根节点
 	if tree.rootNode == nil {
-		tree.rootNode = &treeNode{ // 性质2
+		tree.rootNode = &treeNode{
 			key:        key,
 			value:      value,
-			color:      BLACK,
+			color:      BLACK, // 根节点为黑色
 			parent:     nil,
 			leftChild:  nil,
 			rightChild: nil,
@@ -58,23 +60,25 @@ func (tree *RBTree) Insert(key int64, value int64) {
 			var newNode = treeNode{
 				key:        key,
 				value:      value,
-				color:      BLACK,
+				color:      RED, // 默认新加入节点为红色
 				parent:     currentNode,
 				leftChild:  nil,
 				rightChild: nil,
 			}
 			currentNode.leftChild = &newNode
+			tree.insertCaseOne(&newNode)
 			return
 		} else if key > currentNode.key && currentNode.rightChild == nil {
 			var newNode = treeNode{
 				key:        key,
 				value:      value,
-				color:      BLACK,
+				color:      RED,
 				parent:     currentNode,
 				leftChild:  nil,
 				rightChild: nil,
 			}
 			currentNode.rightChild = &newNode
+			tree.insertCaseOne(&newNode)
 			return
 		} else if key < currentNode.key && currentNode.leftChild != nil {
 			currentNode = currentNode.leftChild
@@ -105,11 +109,56 @@ func (tree *RBTree) Get(key int64) (int64, error) {
 	return 0, errors.New("value is nil")
 }
 
-func insertAdjustOne(node *treeNode) {
-	if node.parent == nil { // insert_case2 父节点为黑色，新节点为红色来保持性质5
+func (tree *RBTree) insertCaseOne(node *treeNode) {
+	// 如果新节点为根节点，变为黑色
+	if node.parent == nil {
+		node.color = BLACK
+	} else {
+		tree.insertCaseTwo(node)
+	}
+}
 
-	} else { // insert_case3 父节点为红色，证明肯定存在祖父节点（根节点为黑色）
+func (tree *RBTree) insertCaseTwo(node *treeNode) {
+	// 父节点为黑色，新节点为红色，无需改变
+	if node.parent.color == BLACK {
+		return
+	} else {
+		tree.insertCaseTree(node)
+	}
+}
 
+func (tree *RBTree) insertCaseTree(node *treeNode) {
+	// 如果父节点和叔父节点都为红色，新加入的节点为红色，需要变色
+	if uncle(node) != nil && uncle(node).color == RED {
+		node.parent.color = BLACK
+		uncle(node).color = BLACK
+		grandparent(node).color = RED
+		tree.insertCaseOne(grandparent(node))
+	} else {
+		tree.insertCaseFour(node)
+	}
+}
+
+func (tree *RBTree) insertCaseFour(node *treeNode) {
+	// 如果自身为父节点的右节点，并且父节点为祖父节点的左节点，让自身左旋，变为insertCaseFive的状态
+	if node == node.parent.rightChild && node.parent == grandparent(node).leftChild {
+		tree.rotateLeft(node)
+	} else if node == node.parent.leftChild && node.parent == grandparent(node).rightChild {
+		tree.rotateRight(node)
+	}
+	tree.insertCaseFive(node)
+}
+
+func (tree *RBTree) insertCaseFive(node *treeNode) {
+	// 如果自身为父节点的左节点，并且父节点也为祖父节点的左节点，让父节点右旋，然后变色
+	if node == node.parent.leftChild && node.parent == grandparent(node).leftChild {
+		tree.rotateRight(node.parent)
+		node.parent.color = BLACK
+		node.parent.rightChild.color = RED
+	} else if node == node.parent.rightChild && node.parent == grandparent(node).rightChild {
+		tree.rotateLeft(node.parent)
+		node.parent.color = BLACK
+		node.parent.leftChild.color = RED
 	}
 }
 
