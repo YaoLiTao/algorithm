@@ -20,13 +20,13 @@ const (
 )
 
 type RBTree struct {
-	size     int64
+	size     int
 	rootNode *treeNode
 }
 
 type treeNode struct {
-	key        int64
-	value      int64
+	key        int
+	value      int
 	color      bool // false：红 true：黑
 	parent     *treeNode
 	leftChild  *treeNode
@@ -40,7 +40,7 @@ func NewRBTree() RBTree {
 	}
 }
 
-func (tree *RBTree) Insert(key int64, value int64) {
+func (tree *RBTree) Insert(key int, value int) {
 	// 根节点
 	if tree.rootNode == nil {
 		tree.rootNode = &treeNode{
@@ -95,7 +95,7 @@ func (tree *RBTree) Delete(data int) {
 
 }
 
-func (tree *RBTree) Get(key int64) (int64, error) {
+func (tree *RBTree) Get(key int) (int, error) {
 	currentNode := tree.rootNode
 	for currentNode != nil {
 		if key < currentNode.key {

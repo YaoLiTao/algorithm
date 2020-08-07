@@ -63,16 +63,10 @@ func main() {
 	//fmt.Println(raw)
 
 	rbTree := search.NewRBTree()
-	rbTree.Insert(3, 3)
-	rbTree.Insert(2, 2)
-	rbTree.Insert(9, 9)
-	rbTree.Insert(0, 0)
-	rbTree.Insert(8, 8)
-	rbTree.Insert(1, 1)
-	rbTree.Insert(4, 4)
-	rbTree.Insert(7, 7)
-	rbTree.Insert(5, 5)
-	rbTree.Insert(6, 6)
+	ints := getRandInt()
+	for i := range ints {
+		rbTree.Insert(ints[i], ints[i])
+	}
 
 	fmt.Println(rbTree.Get(0))
 	fmt.Println(rbTree.Get(1))
@@ -88,9 +82,9 @@ func main() {
 }
 
 func getRandInt() []int {
-	data := [100000]int{0}
+	data := [10000]int{0}
 	for i := 0; i < len(data); i++ {
-		data[i] = rand.Intn(1000000)
+		data[i] = rand.Intn(10000000)
 	}
 	//fmt.Println("randInt: ", data)
 	return data[:]
