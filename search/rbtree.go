@@ -227,17 +227,27 @@ func (tree *RBTree) rotateRight(node *treeNode) {
 /**
 获取祖父节点
 */
-func grandparent(n *treeNode) *treeNode {
-	return n.parent.parent
+func grandparent(node *treeNode) *treeNode {
+	return node.parent.parent
 }
 
 /**
 获取叔父节点
 */
-func uncle(n *treeNode) *treeNode {
-	if n.parent == grandparent(n).leftChild {
-		return grandparent(n).rightChild
+func uncle(node *treeNode) *treeNode {
+	if node.parent == grandparent(node).leftChild {
+		return grandparent(node).rightChild
 	} else {
-		return grandparent(n).leftChild
+		return grandparent(node).leftChild
 	}
+}
+
+/**
+获取兄弟节点
+*/
+func sibling(node *treeNode) *treeNode {
+	if node == node.parent.leftChild {
+		return node.rightChild
+	}
+	return node.leftChild
 }
