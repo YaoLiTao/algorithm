@@ -175,9 +175,7 @@ func (tree *RBTree) Delete(key int) {
 	}
 
 	// 和子节点交换位置
-	if child != nil {
-		child.parent = node.parent
-	}
+	child.parent = node.parent
 	if node.parent != nil {
 		if node == node.parent.leftChild {
 			node.parent.leftChild = child
@@ -193,8 +191,8 @@ func (tree *RBTree) Delete(key int) {
 		return
 	}
 
-	/// 如果子节点是红色节点，把子节点重新着色为黑色节点即可
-	if child != nil && child.color == RED {
+	// 如果子节点是红色节点，把子节点重新着色为黑色节点即可
+	if child.color == RED {
 		child.color = BLACK
 	} else {
 		tree.deleteCaseOne(child)
@@ -202,7 +200,16 @@ func (tree *RBTree) Delete(key int) {
 }
 
 func (tree *RBTree) deleteCaseOne(node *treeNode) {
+	if node.parent != nil {
+		tree.deleteCaseTwo(node)
+	}
+}
 
+func (tree *RBTree) deleteCaseTwo(node *treeNode) {
+	sib := sibling(node)
+	if sib.color == RED {
+
+	}
 }
 
 func (tree *RBTree) Get(key int) (int, error) {
