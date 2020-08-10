@@ -166,10 +166,7 @@ func (tree *RBTree) Delete(key int) {
 	} else {
 		deleteNode = node
 	}
-	tree.deleteOneChild(node)
-}
 
-func (tree *RBTree) deleteOneChild(node *treeNode) {
 	var child *treeNode
 	if node.rightChild == nil {
 		child = node.leftChild
@@ -191,8 +188,21 @@ func (tree *RBTree) deleteOneChild(node *treeNode) {
 		tree.rootNode = child
 	}
 
-	if node.color == BLACK {
+	// 如果是红色节点直接删除不需要重新着色
+	if node.color == RED {
+		return
 	}
+
+	/// 如果子节点是红色节点，把子节点重新着色为黑色节点即可
+	if child != nil && child.color == RED {
+		child.color = BLACK
+	} else {
+		tree.deleteCaseOne(child)
+	}
+}
+
+func (tree *RBTree) deleteCaseOne(node *treeNode) {
+
 }
 
 func (tree *RBTree) Get(key int) (int, error) {
