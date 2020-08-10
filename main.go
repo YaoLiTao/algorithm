@@ -4,6 +4,7 @@ import (
 	"algorithm/search"
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 func main() {
@@ -62,30 +63,29 @@ func main() {
 	//raw := base64.Decode(encoded)
 	//fmt.Println(raw)
 
-	rbTree := search.NewRBTree()
 	ints := getRandInt()
-	for i := range ints {
-		rbTree.Insert(ints[i], ints[i])
-	}
 
-	fmt.Println(rbTree.Get(0))
-	fmt.Println(rbTree.Get(1))
-	fmt.Println(rbTree.Get(2))
-	fmt.Println(rbTree.Get(3))
-	fmt.Println(rbTree.Get(4))
-	fmt.Println(rbTree.Get(5))
-	fmt.Println(rbTree.Get(6))
-	fmt.Println(rbTree.Get(7))
-	fmt.Println(rbTree.Get(8))
-	fmt.Println(rbTree.Get(9))
-	fmt.Println(rbTree.Get(10))
+	rbTree := search.NewRBTree()
+	t1 := time.Now()
+	for i := range ints {
+		rbTree.Insert(ints[i], rand.Int())
+	}
+	rbTree.Insert(1, 2)
+	fmt.Println(time.Now().Sub(t1).Milliseconds())
+
+	hashMap := map[int]int{}
+	t2 := time.Now()
+	for i := range ints {
+		hashMap[i] = rand.Int()
+	}
+	hashMap[1] = 2
+	fmt.Println(time.Now().Sub(t2).Milliseconds())
 }
 
 func getRandInt() []int {
-	data := [10000]int{0}
+	data := [10000000]int{0}
 	for i := 0; i < len(data); i++ {
-		data[i] = rand.Intn(10000000)
+		data[i] = rand.Intn(1000000000)
 	}
-	//fmt.Println("randInt: ", data)
 	return data[:]
 }

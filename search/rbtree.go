@@ -51,6 +51,7 @@ func (tree *RBTree) Insert(key int, value int) {
 			leftChild:  nil,
 			rightChild: nil,
 		}
+		tree.size++
 		return
 	}
 
@@ -67,6 +68,7 @@ func (tree *RBTree) Insert(key int, value int) {
 			}
 			currentNode.leftChild = &newNode
 			tree.insertCaseOne(&newNode)
+			tree.size++
 			return
 		} else if key > currentNode.key && currentNode.rightChild == nil {
 			var newNode = treeNode{
@@ -79,6 +81,7 @@ func (tree *RBTree) Insert(key int, value int) {
 			}
 			currentNode.rightChild = &newNode
 			tree.insertCaseOne(&newNode)
+			tree.size++
 			return
 		} else if key < currentNode.key && currentNode.leftChild != nil {
 			currentNode = currentNode.leftChild
@@ -89,24 +92,6 @@ func (tree *RBTree) Insert(key int, value int) {
 			return
 		}
 	}
-}
-
-func (tree *RBTree) Delete(data int) {
-
-}
-
-func (tree *RBTree) Get(key int) (int, error) {
-	currentNode := tree.rootNode
-	for currentNode != nil {
-		if key < currentNode.key {
-			currentNode = currentNode.leftChild
-		} else if key > currentNode.key {
-			currentNode = currentNode.rightChild
-		} else {
-			return currentNode.value, nil
-		}
-	}
-	return 0, errors.New("value is nil")
 }
 
 func (tree *RBTree) insertCaseOne(node *treeNode) {
@@ -143,8 +128,10 @@ func (tree *RBTree) insertCaseFour(node *treeNode) {
 	// 如果自身为父节点的右节点，并且父节点为祖父节点的左节点，让自身左旋，变为insertCaseFive的状态
 	if node == node.parent.rightChild && node.parent == grandparent(node).leftChild {
 		tree.rotateLeft(node)
+		node = node.leftChild
 	} else if node == node.parent.leftChild && node.parent == grandparent(node).rightChild {
 		tree.rotateRight(node)
+		node = node.rightChild
 	}
 	tree.insertCaseFive(node)
 }
@@ -160,6 +147,75 @@ func (tree *RBTree) insertCaseFive(node *treeNode) {
 		node.parent.color = BLACK
 		node.parent.leftChild.color = RED
 	}
+}
+
+func (tree *RBTree) Delete(key int) {
+	node := tree.searchNode(key)
+	if node == nil {
+		return
+	}
+
+	// 找到这个节点的左子树的最大值元素，并且复制它的值，可以保持树的有序性
+	var deleteNode *treeNode
+	if node.leftChild != nil && node.rightChild != nil {
+		deleteNode = node.leftChild
+		for deleteNode.rightChild != nil {
+			deleteNode = deleteNode.rightChild
+		}
+		node.value = deleteNode.value
+	} else {
+		deleteNode = node
+	}
+	tree.deleteOneChild(node)
+}
+
+func (tree *RBTree) deleteOneChild(node *treeNode) {
+	var child *treeNode
+	if node.rightChild == nil {
+		child = node.leftChild
+	} else {
+		child = node.rightChild
+	}
+
+	// 和子节点交换位置
+	if child != nil {
+		child.parent = node.parent
+	}
+	if node.parent != nil {
+		if node == node.parent.leftChild {
+			node.parent.leftChild = child
+		} else {
+			node.parent.rightChild = child
+		}
+	} else {
+		tree.rootNode = child
+	}
+
+	if node.color == BLACK {
+	}
+}
+
+func (tree *RBTree) Get(key int) (int, error) {
+	node := tree.searchNode(key)
+	if node != nil {
+		return node.value, nil
+	} else {
+		return 0, errors.New("value is nil")
+	}
+}
+
+func (tree *RBTree) searchNode(key int) *treeNode {
+	currentNode := tree.rootNode
+	for currentNode != nil {
+		if key < currentNode.key {
+			currentNode = currentNode.leftChild
+		} else if key > currentNode.key {
+			currentNode = currentNode.rightChild
+		} else {
+			return currentNode
+		}
+	}
+	return nil
 }
 
 /**
@@ -182,14 +238,14 @@ func (tree *RBTree) rotateLeft(node *treeNode) {
 
 	node.leftChild = parent
 	node.parent = grandparent
-	if grandparent == nil { // 判断父节点是否是根节点
-		tree.rootNode = node
-	} else {
+	if grandparent != nil { // 判断父节点是否是根节点
 		if grandparent.leftChild == parent {
 			grandparent.leftChild = node
 		} else {
 			grandparent.rightChild = node
 		}
+	} else {
+		tree.rootNode = node
 	}
 }
 
@@ -213,14 +269,14 @@ func (tree *RBTree) rotateRight(node *treeNode) {
 
 	node.rightChild = parent
 	node.parent = grandparent
-	if grandparent == nil {
-		tree.rootNode = node
-	} else {
+	if grandparent != nil {
 		if grandparent.leftChild == parent {
 			grandparent.leftChild = node
 		} else {
 			grandparent.rightChild = node
 		}
+	} else {
+		tree.rootNode = node
 	}
 }
 
