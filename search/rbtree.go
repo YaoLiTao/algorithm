@@ -183,6 +183,7 @@ func (tree *RBTree) Delete(key int) {
 			node.parent.rightChild = child
 		}
 	} else {
+		//
 		tree.rootNode = child
 	}
 
