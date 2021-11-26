@@ -61,7 +61,7 @@ func StraightInsertionSort(data []int) {
 }
 
 /**
-快速排序
+快速排序（升序）
 */
 func QuickSort(data []int, l int, r int) {
 	if l < r {
